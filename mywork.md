@@ -2,10 +2,10 @@
 
 ## Executive Summary
 
-I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsoft, where I've spent the last 5 years building critical infrastructure for confidential computing. Working with a core team of 8-12 engineers, I've collaborated across Azure Security, CCF (Confidential Consortium Framework), and Azure Kubernetes teams to architect and ship production systems that handle confidential transactions monthly.
+I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsoft, where I've spent the last 5 years building critical infrastructure for confidential computing. Working with a core team of 12 engineers, I've collaborated across Azure Security, CCF (Confidential Consortium Framework), and Kubernetes to architect and ship production systems that handle confidential transactions monthly.
 
 The numbers that matter:
-- 💰 **$120K+ in annual savings** by replacing 1000+ disaster recovery pods with a single Kubernetes operator
+- 💰 **$120K+ in annual savings** by replacing 1000+ disaster recovery pods across region with a single Kubernetes operator per region
 - ⚡ **167 hours to 20 minutes** - 500x faster fleet-wide upgrades for 500+ production ledgers
 - 🔒 **Privacy-first KMS** using OHTTP/HPKE encryption that separates caller IP from request content
 - 🚀 **First Python support in CCF** - reverse-engineered JavaScript interpreter patterns to enable Python in TEEs
