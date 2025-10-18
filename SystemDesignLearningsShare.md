@@ -255,11 +255,11 @@ Based on real VM sizes:
 | **Debugging** | Easy | Medium | Hard |
 | **Infrastructure** | What we have | What we have | +KEDA |
 
-**Upgrading 500 ledgers (each takes 20 min):**
+**Upgrading 1000 ledgers (each takes 20 min):**
 
 **Serial:**
-- 20 min × 500 = 10,000 minutes  
-- That's **~167 hours (~7 days)**
+- 20 min × 1000 = 20,000 minutes  
+- That's **~334 hours (~14 days)**
 - Resource utilization: <10%
 
 **Batching (20 concurrent):**
