@@ -10,7 +10,6 @@ Impact Summary:
 - 🔒 **Privacy-first KMS** using OHTTP/HPKE encryption that separates caller IP from request content
 - 🚀 **Python support in CCF** - reverse-engineered JavaScript interpreter patterns to enable Python in TEEs
 - 📈 **1000 concurrent operations** replacing serial processing that was blocking critical deployments
-- 🛡️ **99.95%+ uptime** across 1000+ production ledgers globally
 
 ### Real-World Impact
 
