@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsoft, where I've spent the last 5 years building critical infrastructure for confidential computing. Working with a core team of 8-12 engineers, I've collaborated across Azure Security, CCF (Confidential Consortium Framework), and Azure Kubernetes teams to architect and ship production systems that handle millions of confidential transactions monthly.
+I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsoft, where I've spent the last 5 years building critical infrastructure for confidential computing. Working with a core team of 8-12 engineers, I've collaborated across Azure Security, CCF (Confidential Consortium Framework), and Azure Kubernetes teams to architect and ship production systems that handle confidential transactions monthly.
 
 The numbers that matter:
 - 💰 **$120K+ in annual savings** by replacing 1000+ disaster recovery pods with a single Kubernetes operator
@@ -14,7 +14,7 @@ The numbers that matter:
 
 ### Real-World Impact
 
-This work helped Azure Confidential Ledger move from early adoption to production scale. Our customers in finance, healthcare, and government now run mission-critical workloads with hardware-backed confidentiality. We're processing millions of transactions monthly across all Azure regions, and the infrastructure improvements I built directly enabled that scale.
+This work helped Azure Confidential Ledger move from early adoption to production scale. Our customers in finance, healthcare, and government now run mission-critical workloads with hardware-backed confidentiality. We're processing lots of transactions monthly across all Azure regions, and the infrastructure improvements I built/influence.
 
 ---
 
@@ -23,7 +23,7 @@ This work helped Azure Confidential Ledger move from early adoption to productio
 #### 1. **Kubernetes Operator for Disaster Recovery** - The $120K Solution
 
 **The Problem We Had:**  
-Every single ledger had its own disaster recovery pod sitting idle 24/7. With 256Mi memory and 100m CPU per pod, 1000 ledgers meant we were burning 256GB of RAM and 100 CPU cores just... waiting. The cost was absurd, and it didn't scale.
+Every single ledger had its own disaster recovery pod sitting idle 24/7. With 256Mi memory and 100m CPU per pod, 1000 ledgers meant we were burning 256GB of RAM and 100 CPU cores. The cost was absurd, and it didn't scale.
 
 I designed and shipped a Kubernetes Operator using Custom Resource Definitions that replaced all those pods with a single intelligent controller. Instead of constant monitoring, we use event-driven recovery with KEDA scaling - jobs only spin up when there's actual work to do.
 
