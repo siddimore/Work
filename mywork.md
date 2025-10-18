@@ -23,9 +23,9 @@ This work helped Azure Confidential Ledger move from early adoption to productio
 #### 1. **Kubernetes Operator for Disaster Recovery** - The $120K Solution
 
 **The Problem We Had:**  
-Every single ledger had its own disaster recovery pod sitting idle 24/7. With 256Mi memory and 100m CPU per pod, 1000 ledgers meant we were burning 256GB of RAM and 100 CPU cores. The cost was absurd, and it didn't scale.
+Every single ledger had its own disaster recovery pod sitting idle 24/7. With 256Mi memory and 100m CPU per pod, 1000 ledgers meant we were using 256GB of RAM and 100 CPU cores. The cost was high, and it didn't scale.
 
-I designed and shipped a Kubernetes Operator using Custom Resource Definitions that replaced all those pods with a single intelligent controller. Instead of constant monitoring, we use event-driven recovery with KEDA scaling - jobs only spin up when there's actual work to do.
+I designed and shipped a Kubernetes Operator using Custom Resource Definitions that replaced all those pods with a single intelligent pod with k8s Opeartor pattern. Instead of constant monitoring, we use event-driven recovery with KEDA scaling - jobs only spin up when there's actual work to do.
 
 **The Results:**
 - Cut resource usage by **99%** (256GB → 0.5GB, 100 cores → 0.2 cores)
@@ -34,7 +34,7 @@ I designed and shipped a Kubernetes Operator using Custom Resource Definitions t
 - Can handle **50 parallel recoveries** when needed
 - Pattern got adopted as the standard across Azure Confidential Computing
 
-**Tech Stack**: Go, Kubernetes Operators, CRDs, KEDA, Prometheus, Azure Monitor
+**Tech Stack**: Go, Kubernetes Operators, CRDs, KEDA
 
 ---
 
@@ -80,10 +80,8 @@ CCF (Confidential Consortium Framework) only spoke JavaScript and C++. That lock
 I reverse-engineered how CCF's JavaScript interpreter works, identified the common patterns for language runtime integration, and implemented Python bindings for CCF's C++ APIs. CPython now runs inside trusted execution environments with full access to the CCF ecosystem.
 
 **What It Unlocked:**
-- **First-in-industry** Python support in confidential TEEs
 - Opened new use cases: federated learning, privacy-preserving analytics, confidential ML
 - **40%+ market expansion** (Python dominates data science)
-- Unique capability - AWS and Google don't have this
 - Proved CCF can support multiple language runtimes
 
 **Tech Stack**: CPython internals, CCF Runtime, C++ API bindings, TEE/SGX/SEV-SNP
@@ -375,7 +373,7 @@ The KMS receives the encrypted blob and:
 ```
 │────────────────────────────────────────────────────────────────────|
 |                           HPKE Key Generation                      │
-│         KMS (CCF Application in Confidential VM/SEV-SNP)           │
+│         KMS (CCF Application in Confidential VM)           │
 ├────────────────────────────────────────────────────────────────────┤
 │                                                                    │
 │  Step 1: KMS generates HPKE key pair (X25519)                     │
@@ -609,51 +607,11 @@ Here's the difference at a glance:
 | **Server sees your IP?** | ✓ Yes | ✗ No (relay blocks it) |
 | **Server sees your request?** | ✓ Yes | ✓ Yes (but only in TEE) |
 | **Proxy sees your request?** | ✗ No (TLS encrypts it) | ✗ No (HPKE encrypts it) |
-| **Proxy sees your IP?** | ✓ Yes | ✓ Yes (that's the point) |
+| **Proxy sees your IP?** | ✓ Yes | ✓ Yes |
 | **Privacy guarantee?** | Server knows everything | IP and content completely separated |
 
 The key insight: With regular TLS, the server at the end of the connection sees both WHO you are (IP address) and WHAT you want (request content). With OHTTP + HPKE, we split that knowledge between two parties that can't talk to each other.
 
-### The Actual Implementation
-
-Here's a summary of the technical architecture for those who want to dig deeper:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    HPKE in OHTTP Architecture                   │
-└─────────────────────────────────────────────────────────────────┘
-
-Phase 1: Key Generation (KMS in Confidential VM)
-├─ Generate X25519 key pair
-├─ Store private key in CCF KV (never exported)
-└─ Publish public key at /app/pubkey
-
-Phase 2: Client Setup
-├─ Fetch KMS HPKE public key
-├─ Verify CCF receipt
-└─ Generate ephemeral key pair for this session
-
-Phase 3: HPKE Encryption (Client)
-├─ ECDH: ephemeral_private × kms_public → shared_secret
-├─ HKDF: shared_secret → symmetric_key (AES-256)
-├─ AES-GCM: Encrypt(headers + body) → ciphertext
-└─ Package: { encapsulated_key, ciphertext, auth_tag }
-
-Phase 4: OHTTP Relay (Privacy Layer)
-├─ Receives encrypted blob
-├─ Cannot decrypt (no private key)
-├─ Sees: source IP, destination, blob size
-└─ Forwards to KMS
-
-Phase 5: HPKE Decryption (KMS in Confidential VM)
-├─ ECDH: kms_private × encapsulated_key → shared_secret
-├─ HKDF: shared_secret → symmetric_key (same as client!)
-├─ AES-GCM: Decrypt(ciphertext) → plaintext
-├─ Verify auth tag (integrity check)
-└─ Process request with full context in TEE
-
-Result: Client identity (IP) and request content separated
-```
 
 **The pieces:**
 1. **HPKE Key Management**: Generation, secure storage in CCF, public distribution
@@ -661,11 +619,6 @@ Result: Client identity (IP) and request content separated
 3. **Crypto Operations**: X25519 ECDH, HKDF key derivation, AES-GCM encryption
 4. **CCF Integration**: Receipt generation so clients can verify public keys are authentic
 
-**Technical stuff:**
-- **HPKE is complex**: Getting ephemeral key handling right took multiple iterations
-- **Key rotation is tricky**: You need client-side cache invalidation or things break
-- **Performance matters**: HPKE setup has overhead - consider caching symmetric keys for multi-request sessions
-- **Testing is crucial**: You need to simulate the full relay setup to actually verify privacy guarantees
 
 **Security stuff:**
 - **Protect those private keys**: HPKE private keys must NEVER leave the TEE, ever
