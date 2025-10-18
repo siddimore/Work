@@ -14,7 +14,7 @@ The numbers that matter:
 
 ### Real-World Impact
 
-This work helped Azure Confidential Ledger move from early adoption to production scale. Our customers in finance, healthcare, and government now run mission-critical workloads with hardware-backed confidentiality. We're processing lots of transactions monthly across all Azure regions, and the infrastructure improvements I built/influence.
+This work helped Azure Confidential Ledger move from early adoption to production scale. Our customers in finance, healthcare, and government now run mission-critical workloads with hardware-backed confidentiality. We're processing lots of transactions monthly across Azure helping 3P and 1P with some of the infrastructure improvements i built/influence.
 
 ---
 
@@ -38,10 +38,10 @@ I designed and shipped a Kubernetes Operator using Custom Resource Definitions t
 
 ---
 
-#### 2. **KEDA-Based Parallel Upgrades** - 7 Days to 20 Minutes
+#### 2. **KEDA-Based Parallel Upgrades** - 14 Days to 20 Minutes
 
 **The Pain Point:**  
-Fleet-wide upgrades ran serially. One ledger at a time. Each upgrade takes 20 minutes. For 500 ledgers, that's **~167 hours (~7 days)** of waiting. Security patches? Delayed by a week. New features? Stuck in an endless queue.
+Fleet-wide upgrades ran serially. One ledger at a time. Each upgrade takes 20 minutes. For 1000 ledgers, that's **~334 hours (~14 days)** of waiting. Security patches? Delayed by a week. New features? Stuck in an endless queue.
 
 Built an event-driven autoscaling system with KEDA that triggers parallel Kubernetes jobs based on Azure Storage Queue depth. Each upgrade gets its own isolated container, and the system automatically scales to handle **500 ledgers concurrently**.
 
@@ -68,7 +68,7 @@ Implemented OHTTP (Oblivious HTTP) with HPKE encryption. Requests go through a r
 - Zero-knowledge architecture with cryptographic guarantees
 - CCF receipts provide tamper-proof audit trails
 
-**Tech Stack**: TypeScript, HPKE (RFC 9180), OHTTP, COSE Sign1, X25519 ECDH, AES-GCM, CCF, SEV-SNP
+**Tech Stack**: TypeScript, HPKE (RFC 9180), OHTTP, COSE Sign1, X25519 ECDH, AES-GCM, CCF
 
 ---
 
