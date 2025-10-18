@@ -315,7 +315,7 @@ When a client requests a key:
 
 ### What I Built
 
-I implemented OHTTP (Oblivious HTTP) with HPKE encryption. Here's how it works:
+Implemented OHTTP (Oblivious HTTP) with HPKE encryption. Here's how it works:
 
 **The relay** (proxy in the middle):
 - Sees the client's IP address
