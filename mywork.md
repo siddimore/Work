@@ -1613,27 +1613,6 @@ spec:
 
 ---
 
-## Impact Summary
-
-### Quantifiable Achievements
-- 💰 **$170K+ total annual cost savings** ($120K disaster recovery + $50K upgrade efficiency)
-- ⚡ **10x performance improvements** across multiple systems
-- 📊 **99.95%+ uptime** for 500+ production confidential ledgers
-- 🚀 **40%+ market expansion** through Python developer enablement
-- 🔒 **First-in-industry** privacy-preserving KMS architecture
----
-
-# By The Numbers
-
-### The Bottom Line
-- 💰 **$170K+ saved annually** ($120K disaster recovery + $50K deployment efficiency)
-- ⚡ **500x faster** deployments (167 hours to 20 minutes)
-- 📊 **99.95%+ uptime** for 500+ production ledgers globally
-- 🚀 **40%+ market expansion** by enabling Python developers
-- 🔒 **First in the industry** with privacy-preserving KMS architecture
-- 🌍 **Global scale** - supporting enterprise customers in every Azure region
-- 📉 **99% resource reduction** (256GB → 0.5GB, 100 cores → 0.2 cores)
-
 ### What I Built
 
 1. **CPython in CCF** - Industry first, nobody else has this
@@ -1643,9 +1622,8 @@ spec:
 
 ### Skills in Action
 
-- **8+ programming languages** across the stack (Go, TypeScript, C#, Python, JavaScript, PowerShell, Bash, YAML)
-- **3 cloud platforms** with deep Azure expertise
+- **Multiple programming languages** across the stack (Go, TypeScript, C#, Python, JavaScript)
 - **Confidential computing specialization** - TEEs, attestation, cryptographic protocols
-- **Production operations** - 500+ services, 99.95%+ SLA, 24/7 on-call responsibility
+- **Production operations** - 1000+ services, 99.95%+ SLA, 24/7 on-call responsibility
 
 ---
