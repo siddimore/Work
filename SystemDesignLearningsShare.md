@@ -1613,13 +1613,6 @@ spec:
 
 ---
 
-### What I Built
-
-1. **CPython in CCF** - Industry first, nobody else has this
-2. **OHTTP Privacy Layer** - Regulatory compliance through architectural separation
-3. **Kubernetes Operator Pattern** - Now the standard across Azure Confidential Computing
-4. **Fleet Operations Optimization** - 10x improvement in deployment speed
-
 ### Skills in Action
 
 - **Multiple programming languages** across the stack (Go, TypeScript, C#, Python, JavaScript)
