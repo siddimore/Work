@@ -6,11 +6,11 @@ I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsof
 
 The numbers that matter:
 - 💰 **$120K+ in annual savings** by replacing 1000+ disaster recovery pods across region with a single Kubernetes operator per region
-- ⚡ **167 hours to 20 minutes** - 500x faster fleet-wide upgrades for 500+ production ledgers
+- ⚡ **334 hours to 20 minutes** - 1000x faster fleet-wide upgrades for 1000+ production ledgers
 - 🔒 **Privacy-first KMS** using OHTTP/HPKE encryption that separates caller IP from request content
 - 🚀 **First Python support in CCF** - reverse-engineered JavaScript interpreter patterns to enable Python in TEEs
-- 📈 **500 concurrent operations** replacing serial processing that was blocking critical deployments
-- 🛡️ **99.95%+ uptime** across 500+ production ledgers globally
+- 📈 **1000 concurrent operations** replacing serial processing that was blocking critical deployments
+- 🛡️ **99.95%+ uptime** across 1000+ production ledgers globally
 
 ### Real-World Impact
 
@@ -46,9 +46,9 @@ Fleet-wide upgrades ran serially. One ledger at a time. Each upgrade takes 20 mi
 Built an event-driven autoscaling system with KEDA that triggers parallel Kubernetes jobs based on Azure Storage Queue depth. Each upgrade gets its own isolated container, and the system automatically scales to handle **500 ledgers concurrently**.
 
 **What Changed:**
-- **500x faster** (167 hours down to 20 minutes)
+- **1000 faster** (334 hours down to 20 minutes)
 - Same-day security patching became reality
-- **500 concurrent upgrades** automatically managed
+- **1000 concurrent upgrades** automatically managed
 - **$50K+ saved annually** in engineering time
 - Moved from monthly to **weekly releases**
 
@@ -95,14 +95,12 @@ This is my technical deep-dive into the systems I've built for Azure Confidentia
 ## Jump To
 
 1. [Scalability](#scalability) - Making things fast
-   - [Parallel Upgrades: 500x Speed Improvement](#the-parallel-upgrade-story-batching-vs-keda)
+   - [Parallel Upgrades: 1000x Speed Improvement](#the-parallel-upgrade-story-batching-vs-keda)
 2. [Security](#security) - Privacy-first architecture  
    - [OHTTP/HPKE: The KMS That Cant Track You](#building-a-kms-that-cant-track-you-ohttp-and-hpke)
-3. [Operations](#operations-running-500-ledgers-without-losing-your-mind) - Running 500+ ledgers reliably
+3. [Operations](#operations-running-1000-ledgers) - Running 1000+ ledgers reliably
    - [The Kubernetes Operator Story](#the-kubernetes-operator-story)
 4. [Cool Stuff](#the-experimental-stuff) - The experimental/emerging work
-   - [Python in Confidential VMs](#python-in-confidential-vms-industry-first)
-   - [JavaScript in TEEs](#javascript-in-a-trusted-execution-environment)
 
 ---
 
@@ -116,17 +114,17 @@ Here's the situation we were in: We had 500+ confidential ledgers running in pro
 
 **The math:**
 - Average upgrade time: 20 minutes per ledger
-- 500 ledgers × 20 minutes = **10,000 minutes (~167 hours / ~7 days)**
+- 1000 ledgers × 20 minutes = **20,000 minutes (~334 hours / ~14 days)**
 - Security patches delayed by a week
 - New features stuck in deployment hell
 - On-call engineers pulling all-nighters for rollouts
 
-This wasn't just inconvenient - it was a **security risk**. CVEs don't wait for your 7-day deployment window.
+This wasn't just inconvenient - it was a **security risk**. CVEs don't wait for your 14-day deployment window.
 
 ### What We Actually Achieved
 
 After shipping the parallel upgrade system:
-- ⚡ **20 minutes** for full fleet upgrades (was 167 hours - **500x improvement**)  
+- ⚡ **20 minutes** for full fleet upgrades (was 334 hours - **1000x improvement**)  
 - 🛡️ Same-day security patches became reality
 - 💰 **$50K+ saved annually** in engineering time alone
 - 😊 Engineers stopped dreading deployment days
@@ -146,7 +144,7 @@ The original system was straightforward but painfully slow:
 - Repeat 500 times
 
 **Problems:**
-- **Slow**: 167 hours (~7 days) for full fleet
+- **Slow**: 334 hours (~14 days) for full fleet
 - **Resource waste**: Using maybe 5% of available CPU/memory
 - **No scaling**: Can't throw more hardware at the problem
 - **Brittle**: One failed upgrade if not handled properly could block everything behind it
