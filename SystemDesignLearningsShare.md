@@ -4,7 +4,7 @@
 
 I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsoft, where I've spent the last 5 years building critical infrastructure for confidential computing. Working with a core team of 12 engineers, I've collaborated to Azure Confidential Ledger, CCF (Confidential Consortium Framework), and Kubernetes to architect and ship production systems that handle confidential transactions monthly.
 
-The numbers that matter:
+Impact Summary:
 - 💰 **$120K+ in annual savings** by replacing 1000+ disaster recovery pods across region with a single Kubernetes operator per region
 - ⚡ **334 hours to 20 minutes** - 1000x faster fleet-wide upgrades for 1000+ production ledgers
 - 🔒 **Privacy-first KMS** using OHTTP/HPKE encryption that separates caller IP from request content
@@ -141,7 +141,7 @@ The original system was straightforward but painfully slow:
 - Grabs one message (one ledger) at a time  
 - Runs `HelmUpgradeInstall()` - takes ~20 minutes
 - Moves to next message
-- Repeat 500 times
+- Repeat 1000 times 
 
 **Problems:**
 - **Slow**: 334 hours (~14 days) for full fleet
@@ -149,7 +149,7 @@ The original system was straightforward but painfully slow:
 - **No scaling**: Can't throw more hardware at the problem
 - **Brittle**: One failed upgrade if not handled properly could block everything behind it
 
-### Option 1: The Batching Approach
+### Option 1: Batching Approach
 
 **The idea**: Beef up our existing service to process multiple ledgers concurrently in one pod.
 
@@ -162,7 +162,7 @@ The original system was straightforward but painfully slow:
 - **Concurrent processing**: Use `Task.Run()` with `SemaphoreSlim` to limit parallelism
 - **Resource management**: Implement backpressure so we don't OOM the pod
 
-### The Reality: Scalability Ceiling
+### Reality: Scalability Ceiling per Upgrade pod
 
 #### Thread Pool Limits
 .NET's thread pool isn't infinite. Practical limits:
@@ -177,7 +177,7 @@ Based on real VM sizes:
 
 **The ceiling**: Around 40 concurrent upgrades max.
 
-### Why Batching Makes Sense
+### Rationality for Batching Approach
 
 **Pros:**
 1. **Low effort**: Small changes to existing code
@@ -216,11 +216,11 @@ Based on real VM sizes:
 
 **Resource isolation:**
 - Each upgrade runs in its own container
-- Complete isolation - one failure doesn't cascade
+- Complete isolation
 - Dedicated CPU/memory per job
 
 **Theoretical limits:**
-- Only bounded by cluster capacity
+- Only bounded by cluster capacity (Handled by enabling Auto scaling)
 - Azure Storage Queue: >1000 msgs/sec throughput
 - KEDA: Can manage hundreds of concurrent jobs
 - Reality: We run at **500 concurrent** (one per ledger)
@@ -333,9 +333,9 @@ HPKE stands for "Hybrid Public Key Encryption":
 
 **The setup:**
 - **X25519 (asymmetric)**: Slow but secure - used to agree on a shared secret
-- **HKDF-SHA256 (key derivation)**: Takes that secret and stretches it into actual encryption keys
-- **AES-256-GCM (symmetric)**: Fast bulk encryption - this does the real work
-
+- **HKDF-SHA256 (key derivation)**: Takes that secret and converts it into actual encryption keys
+- **AES-256-GCM (symmetric)**: Fast bulk encryption
+  
 ### How a Request Actually Flows
 
 Here's what happens when a client requests a key from our KMS:
@@ -343,7 +343,7 @@ Here's what happens when a client requests a key from our KMS:
 **Step 1: Client grabs the public key**
 ```
 Client → KMS: "Hey, what's your HPKE public key?"
-KMS → Client: "Here it is, along with a CCF receipt proving it's legit"
+KMS → Client: "Here it is, along with a CCF receipt"
 ```
 
 **Step 2: Client encrypts the request**
@@ -821,7 +821,7 @@ This Kubernetes operator became the standard pattern for operational tooling. Th
 
 ## JavaScript in a Trusted Execution Environment
 
-### What CCF Actually Is
+### What is CCF
 
 CCF (Confidential Consortium Framework) is Microsoft's open-source framework for building confidential applications. Think of it as a platform where your code runs inside hardware-protected enclaves (Intel SGX, AMD SEV-SNP) and nobody - not even Microsoft, not even the VM admin - can peek at what's happening inside.
 
