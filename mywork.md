@@ -41,9 +41,9 @@ I designed and shipped a Kubernetes Operator using Custom Resource Definitions t
 #### 2. **KEDA-Based Parallel Upgrades** - 7 Days to 20 Minutes
 
 **The Pain Point:**  
-Fleet-wide upgrades ran serially. One ledger at a time. Each upgrade takes 20 minutes. For 500 ledgers, that's **~167 hours (~7 days)** of waiting. Security patches? Delayed by a week. New features? Stuck in an endless queue. On-call engineers? Pulling all-nighters.
+Fleet-wide upgrades ran serially. One ledger at a time. Each upgrade takes 20 minutes. For 500 ledgers, that's **~167 hours (~7 days)** of waiting. Security patches? Delayed by a week. New features? Stuck in an endless queue.
 
-Built an event-driven autoscaling system with KEDA that triggers parallel Kubernetes jobs based on Azure Storage Queue depth. Each upgrade gets its own isolated container, and the system automatically scales to handle **all 500 ledgers concurrently**.
+Built an event-driven autoscaling system with KEDA that triggers parallel Kubernetes jobs based on Azure Storage Queue depth. Each upgrade gets its own isolated container, and the system automatically scales to handle **500 ledgers concurrently**.
 
 **What Changed:**
 - **500x faster** (167 hours down to 20 minutes)
@@ -72,7 +72,7 @@ Implemented OHTTP (Oblivious HTTP) with HPKE encryption. Requests go through a r
 
 ---
 
-#### 4. **Python in Confidential VMs**
+#### 4. **Python on Confidential ACL**
 
 **The Gap:**  
 CCF (Confidential Consortium Framework) only spoke JavaScript and C++. That locked out the entire Python community - data scientists, ML engineers, researchers. These are exactly the people who need confidential computing most.
@@ -329,24 +329,16 @@ I implemented OHTTP (Oblivious HTTP) with HPKE encryption. Here's how it works:
 - Doesn't see the client's IP (relay forwarded it)
 - Can decrypt and process the request
 
-**Result**: Complete separation. Who you are is divorced from what you're requesting. That's the privacy guarantee.
+**Result**: Complete separation, a privacy guarantee.
 
 ### How HPKE Actually Works
 
-HPKE stands for "Hybrid Public Key Encryption" - fancy name for a clever trick:
+HPKE stands for "Hybrid Public Key Encryption":
 
 **The setup:**
 - **X25519 (asymmetric)**: Slow but secure - used to agree on a shared secret
 - **HKDF-SHA256 (key derivation)**: Takes that secret and stretches it into actual encryption keys
 - **AES-256-GCM (symmetric)**: Fast bulk encryption - this does the real work
-
-**Why bother with "hybrid"?**
-
-Pure asymmetric crypto (RSA, etc.) is painfully slow. Like, "encrypt a 1MB file and wait 5 seconds" slow. But it's great for key exchange because you don't need to share secrets ahead of time.
-
-Pure symmetric crypto (AES) is blazing fast, but you need both sides to already have the same key. Chicken and egg problem.
-
-HPKE does the smart thing: use the slow asymmetric crypto once to agree on a key, then switch to fast symmetric crypto for everything else. Think of it like using a slow key to open a safe, then using the fast key inside for all your actual work.
 
 ### How a Request Actually Flows
 
@@ -583,7 +575,7 @@ The KMS receives the encrypted blob and:
 └────────────────────────────────────────────────────────────────────┘
 ```
 
-### The Technical Flow (Detailed)
+### Technical Flow
 
 **Server-Side: Key Generation and Storage**
 
@@ -691,8 +683,6 @@ This HPKE-based OHTTP implementation is a practical reference for anyone buildin
 
 ### The Problem That Was Costing Us Money
 
-Let me paint you a picture of what we had before:
-
 **The old way:**
 - Every single ledger namespace got its own disaster recovery pod
 - These pods just sat there 24/7, waiting for something to break
@@ -704,8 +694,6 @@ Let me paint you a picture of what we had before:
 - 1,000 pods × 100m CPU = **100 CPU cores** sitting idle
 - Cost: **~$120K per year** on Azure AKS
 - Actual crash events: Maybe 10-20 per month
-
-We were essentially paying for a 24/7 security guard at every single door in a 1,000-door building, when we only needed guards to show up when an alarm goes off.
 
 **The new approach: Kubernetes Operator + KEDA**
 
@@ -871,11 +859,11 @@ We're adding tiered recovery strategies based on ledger criticality (critical/st
 
 **What we got:**
 - **Cost reduction**: 98% cut in disaster recovery infrastructure costs
-- **Better reliability**: Faster detection and recovery times
+- **Better reliability**: Faster recovery times
 - **True scalability**: Scales with cluster size, not ledger count
 - **Simpler operations**: One thing to manage instead of 1,000
 
-This Kubernetes operator became the standard pattern for operational tooling across Azure Confidential Computing. The architecture proves that cloud-native patterns can solve traditional operational challenges while delivering immediate cost savings and long-term architectural benefits.
+This Kubernetes operator became the standard pattern for operational tooling. The architecture proves that cloud-native patterns can solve traditional operational challenges while delivering immediate cost savings and long-term architectural benefits.
 
 
 # The Experimental Stuff
@@ -927,7 +915,7 @@ This runs entirely inside the TEE. The validation logic, the compliance proof ge
 
 ---
 
-## Python in Confidential VMs: Industry First
+## Python in Confidential VMs:
 
 ### The Gap I Found
 
@@ -965,7 +953,7 @@ Python code that mirrors the JavaScript capabilities:
 
 ### Developer Experience: Familiar Tools
 
-You can write Flask apps that run in TEEs:
+You can write Flask apps that run in TEEs with ACL guarantee:
 
 **Code Example: Python Flask with CCF Integration**
 
@@ -984,23 +972,13 @@ You can write Flask apps that run in TEEs:
 - **Confidential research**: Collaborative research on healthcare/financial datasets
 
 **Market impact:**
-- **Developer adoption**: Opened confidential computing to the entire Python community
-- **New capabilities**: Enabled ML/data science scenarios competitors don't have
-- **Platform stickiness**: Python developers have less reason to leave Azure
+- **New capabilities**: Enabl ML/data science scenarios with Privacy in forefront
 - **40%+ market expansion**: Python dominates data science - we can now reach them
 
-**Integration opportunities:**
-- Azure Machine Learning with confidential training
-- Jupyter Notebooks in confidential environments
-- Serverless confidential Python functions
-
 This wasn't just about adding a feature. I took insights from one language runtime (JavaScript), identified the underlying patterns, and proved that CCF can support any language runtime. That:
-- **Democratizes confidential computing**: Now accessible to Python developers
+- **More Languages To Express**: Now accessible to Python developers
 - **Enables new markets**: Data science and ML in confidential environments
 - **Proves extensibility**: CCF isn't locked to one or two languages
-- **Creates competitive advantage**: AWS and Google don't have this
-
-We turned confidential computing from a niche security feature into a platform that mainstream data scientists can actually use.
 
 ---
 
