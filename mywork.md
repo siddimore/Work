@@ -170,13 +170,13 @@ The original system was straightforward but painfully slow:
 
 #### Thread Pool Limits
 .NET's thread pool isn't infinite. Practical limits:
-- Memory overhead: Each concurrent upgrade needs 100-500MB  
+- Memory overhead: Each concurrent upgrade needs 500MB  
 - Single pod = single failure point
 
 #### Realistic Concurrency
 Based on real VM sizes:
-- **4 cores, 16GB RAM**: Maybe 5-10 concurrent upgrades
-- **8 cores, 32GB RAM**: 15-20 concurrent upgrades  
+- **4 cores, 16GB RAM**: Maybe 10 concurrent upgrades
+- **8 cores, 32GB RAM**: 20 concurrent upgrades  
 - **16 cores, 64GB RAM**: 25-40 tops
 
 **The ceiling**: Around 40 concurrent upgrades max.
