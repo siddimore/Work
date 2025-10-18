@@ -628,14 +628,14 @@ This HPKE-based OHTTP implementation is a practical reference for anyone buildin
 
 ---
 
-# Operations: Running 500+ Ledgers Without Losing Your Mind
+# Operations: Running Disaster Recovery on 1000+ Ledgers
 
 ## The Kubernetes Operator Story
 
 ### The Problem That Was Costing Us Money
 
 **The old way:**
-- Every single ledger namespace got its own disaster recovery pod
+- Every single ledger namespace got its own disaster recovery pod (initial design)
 - These pods just sat there 24/7, waiting for something to break
 - Each pod: 256Mi memory, 100m CPU, doing absolutely nothing most of the time
 
@@ -825,7 +825,7 @@ This Kubernetes operator became the standard pattern for operational tooling. Th
 
 CCF (Confidential Consortium Framework) is Microsoft's open-source framework for building confidential applications. Think of it as a platform where your code runs inside hardware-protected enclaves (Intel SGX, AMD SEV-SNP) and nobody - not even Microsoft, not even the VM admin - can peek at what's happening inside.
 
-The killer feature: CCF lets you write this secure code in **JavaScript** instead of learning hardcore C++ enclave programming. That's a huge deal for developer adoption.
+CCF lets you write this secure code in **JavaScript** instead of learning hardcore C++ enclave programming. That's a huge deal for developer adoption.
 
 ### Why JavaScript in TEEs Matters
 
@@ -923,7 +923,7 @@ You can write Flask apps that run in TEEs with ACL guarantee:
 - **Confidential research**: Collaborative research on healthcare/financial datasets
 
 **Market impact:**
-- **New capabilities**: Enabl ML/data science scenarios with Privacy in forefront
+- **New capabilities**: Enabl ML/data science scenarios with Privacy in forefront on immutable ledger
 - **40%+ market expansion**: Python dominates data science - we can now reach them
 
 This wasn't just about adding a feature. I took insights from one language runtime (JavaScript), identified the underlying patterns, and proved that CCF can support any language runtime. That:
