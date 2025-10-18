@@ -38,7 +38,7 @@ I designed and shipped a Kubernetes Operator using Custom Resource Definitions t
 
 ---
 
-#### 2. **KEDA-Based Parallel Upgrades** - 14 Days to 20 Minutes
+#### 2. **KEDA-Based Parallel Upgrades** - 14 Days for all regions to 20 Minutes per region
 
 **The Pain Point:**  
 Fleet-wide upgrades ran serially. One ledger at a time. Each upgrade takes 20 minutes. For 1000 ledgers, that's **~334 hours (~14 days)** of waiting. Security patches? Delayed by a week. New features? Stuck in an endless queue.
@@ -46,7 +46,7 @@ Fleet-wide upgrades ran serially. One ledger at a time. Each upgrade takes 20 mi
 Built an event-driven autoscaling system with KEDA that triggers parallel Kubernetes jobs based on Azure Storage Queue depth. Each upgrade gets its own isolated container, and the system automatically scales to handle **500 ledgers concurrently**.
 
 **What Changed:**
-- **1000 faster** (334 hours down to 20 minutes)
+- **1000 faster** (334 hours for all regions to 20 minutes per region)
 - Same-day security patching became reality
 - **1000 concurrent upgrades** automatically managed
 - **$50K+ saved annually** in engineering time
