@@ -2,12 +2,12 @@
 
 ## Executive Summary
 
-I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsoft, where I've spent the last 5 years building critical infrastructure for confidential computing. Working with a core team of 12 engineers, I've collaborated to Azure Confidential Ledger, CCF (Confidential Consortium Framework), and Kubernetes to architect and ship production systems that handle confidential transactions monthly.
+I'm a Senior Software Engineer on the Azure Confidential Ledger team at Microsoft, where I've spent the last 5 years building critical infrastructure for confidential computing. Working with a core team of 12 engineers, I've collaborated to Azure Confidential Ledger, CCF (Confidential Consortium Framework), and wrote infra on Kubernetes  to architect and ship production systems that handle confidential transactions.
 
 Impact Summary:
 - 💰 **$120K+ in annual savings** by replacing 1000+ disaster recovery pods across region with a single Kubernetes operator per region
 - ⚡ **334 hours to 20 minutes** - 1000x faster fleet-wide upgrades for 1000+ production ledgers
-- 🔒 **Privacy-first KMS** using OHTTP/HPKE encryption that separates caller IP from request content
+- 🔒 **Privacy KMS** using OHTTP/HPKE encryption that separates caller IP from request content
 - 🚀 **Python support in CCF** - reverse-engineered JavaScript interpreter patterns to enable Python in TEEs
 - 📈 **1000 concurrent operations** replacing serial processing that was blocking critical deployments
 
@@ -74,13 +74,12 @@ Implemented OHTTP (Oblivious HTTP) with HPKE encryption. Requests go through a r
 #### 4. **Python on Confidential ACL**
 
 **The Gap:**  
-CCF (Confidential Consortium Framework) only spoke JavaScript and C++. That locked out the entire Python community - data scientists, ML engineers, researchers. These are exactly the people who need confidential computing most.
+CCF (Confidential Consortium Framework) only supported JavaScript interpreter and C++ for deploying applications. That locked out the entire Python community - data scientists, ML engineers, researchers. These are exactly the people who need confidential computing most.
 
 I reverse-engineered how CCF's JavaScript interpreter works, identified the common patterns for language runtime integration, and implemented Python bindings for CCF's C++ APIs. CPython now runs inside trusted execution environments with full access to the CCF ecosystem.
 
 **What It Unlocked:**
 - Opened new use cases: federated learning, privacy-preserving analytics, confidential ML
-- **40%+ market expansion** (Python dominates data science)
 - Proved CCF can support multiple language runtimes
 
 **Tech Stack**: CPython internals, CCF Runtime, C++ API bindings, TEE/SGX/SEV-SNP
@@ -188,7 +187,7 @@ Based on real VM sizes:
 
 **Cons:**
 1. **Hard ceiling**: Can't scale past ~40 concurrent
-2. **Fragile**: One pod failure = all concurrent upgrades fail
+2. **Fragile**: One pod failure = all concurrent upgrades on that pod need to be redone
 3. **Manual tuning**: Have to guess the right concurrency limit
 4. **Memory pressure**: High risk of OOM kills
 5. **No auto-scale**: Queue depth doesn't matter, you're stuck at your limit
